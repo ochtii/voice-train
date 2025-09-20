@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Voice Recognition System</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/settings.css">
+    <script src="/static/js/settings.js" defer></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L9 4H6C4.9 4 4 4.9 4 6V18C4 19.1 4.9 20 6 20H18C19.1 20 20 19.1 20 18V6C20 4.9 19.1 4 18 4H15L12 1ZM12 9C13.66 9 15 10.34 15 12S13.66 15 12 15 9 13.66 9 12 10.34 9 12 9Z"/>
+                </svg>
+                <div>
+                    <div class="nav-title">Voice Recognition</div>
+                    <div class="nav-subtitle">Settings</div>
+                </div>
+            </a>
+
+            <div class="nav-menu">
+                <a href="/dashboard" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/enrollment" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9.5C15 10.8 16.2 12 17.5 12S20 10.8 20 9.5H21ZM3 13C5.33 13 7.31 14.14 8.54 15.86L12 13L15.46 15.86C16.69 14.14 18.67 13 21 13V11C17.13 11 14 14.13 14 18V22H10V18C10 14.13 6.87 11 3 11V13Z"/>
+                    </svg>
+                    Speaker Enrollment
+                </a>
+                <a href="/devices" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 6H20V16H4M20 18A2 2 0 0 0 22 16V6C22 4.89 21.1 4 20 4H4A2 2 0 0 0 2 6V16A2 2 0 0 0 4 18H0V20H24V18H20Z"/>
+                    </svg>
+                    Devices
+                </a>
+                <a href="/settings" class="nav-link active">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                    </svg>
+                    Settings
+                </a>
+            </div>
+
+            <div class="nav-actions">
+                <div class="connection-status" id="connectionStatus">
+                    <div class="status-indicator" id="statusIndicator"></div>
+                    <span id="statusText">Connecting...</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="theme-icon-light" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>
+                    </svg>
+                    <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.4 6.35,17.41C9.37,20.43 14,20.54 17.33,17.97Z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-info">
+                    <h1>Settings</h1>
+                    <p>Configure voice recognition system settings</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="resetSettingsBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+                        </svg>
+                        Reset to Defaults
+                    </button>
+                    <button class="btn btn-primary" id="saveSettingsBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/>
+                        </svg>
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Tabs -->
+            <div class="settings-tabs">
+                <div class="tab-list">
+                    <button class="tab-button active" data-tab="audio">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12Z"/>
+                        </svg>
+                        Audio Settings
+                    </button>
+                    <button class="tab-button" data-tab="recognition">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V9.5C15 10.8 16.2 12 17.5 12S20 10.8 20 9.5H21ZM3 13C5.33 13 7.31 14.14 8.54 15.86L12 13L15.46 15.86C16.69 14.14 18.67 13 21 13V11C17.13 11 14 14.13 14 18V22H10V18C10 14.13 6.87 11 3 11V13Z"/>
+                        </svg>
+                        Recognition
+                    </button>
+                    <button class="tab-button" data-tab="system">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 6H20V16H4M20 18A2 2 0 0 0 22 16V6C22 4.89 21.1 4 20 4H4A2 2 0 0 0 2 6V16A2 2 0 0 0 4 18H0V20H24V18H20Z"/>
+                        </svg>
+                        System
+                    </button>
+                    <button class="tab-button" data-tab="security">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.4 16,13V16C16,17.4 15.4,18 14.8,18H9.2C8.6,18 8,17.4 8,16V13C8,12.4 8.6,11.5 9.2,11.5V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,10V11.5H13.5V10C13.5,8.7 12.8,8.2 12,8.2Z"/>
+                        </svg>
+                        Security
+                    </button>
+                </div>
+
+                <!-- Audio Settings Tab -->
+                <div class="tab-content active" id="audio-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">Audio Configuration</h3>
+                        
+                        <div class="settings-group">
+                            <h4 class="group-title">Input Settings</h4>
+                            <div class="setting-item">
+                                <label for="inputDevice" class="setting-label">Default Input Device</label>
+                                <select id="inputDevice" class="form-select">
+                                    <option value="">Select microphone...</option>
+                                </select>
+                                <div class="setting-description">Choose the default microphone for voice recognition</div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="inputGain" class="setting-label">Input Gain</label>
+                                <div class="range-input">
+                                    <input type="range" id="inputGain" min="0" max="100" value="50" class="range-slider">
+                                    <span class="range-value" id="inputGainValue">50%</span>
+                                </div>
+                                <div class="setting-description">Adjust microphone sensitivity</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="noiseReduction" class="setting-label">Noise Reduction</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="noiseReduction" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Reduce background noise during recording</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Output Settings</h4>
+                            <div class="setting-item">
+                                <label for="outputDevice" class="setting-label">Default Output Device</label>
+                                <select id="outputDevice" class="form-select">
+                                    <option value="">Select speaker...</option>
+                                </select>
+                                <div class="setting-description">Choose the default speaker for audio feedback</div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="outputVolume" class="setting-label">Output Volume</label>
+                                <div class="range-input">
+                                    <input type="range" id="outputVolume" min="0" max="100" value="75" class="range-slider">
+                                    <span class="range-value" id="outputVolumeValue">75%</span>
+                                </div>
+                                <div class="setting-description">Control system output volume</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="audioFeedback" class="setting-label">Audio Feedback</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="audioFeedback" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Play confirmation sounds for recognition events</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Advanced Audio</h4>
+                            <div class="setting-item">
+                                <label for="sampleRate" class="setting-label">Sample Rate</label>
+                                <select id="sampleRate" class="form-select">
+                                    <option value="16000">16 kHz</option>
+                                    <option value="22050">22.05 kHz</option>
+                                    <option value="44100" selected>44.1 kHz</option>
+                                    <option value="48000">48 kHz</option>
+                                </select>
+                                <div class="setting-description">Audio quality setting (higher = better quality, more CPU)</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="bufferSize" class="setting-label">Buffer Size</label>
+                                <select id="bufferSize" class="form-select">
+                                    <option value="512">512 samples</option>
+                                    <option value="1024" selected>1024 samples</option>
+                                    <option value="2048">2048 samples</option>
+                                    <option value="4096">4096 samples</option>
+                                </select>
+                                <div class="setting-description">Lower values reduce latency but may cause audio dropouts</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recognition Settings Tab -->
+                <div class="tab-content" id="recognition-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">Voice Recognition Configuration</h3>
+                        
+                        <div class="settings-group">
+                            <h4 class="group-title">Recognition Accuracy</h4>
+                            <div class="setting-item">
+                                <label for="confidenceThreshold" class="setting-label">Confidence Threshold</label>
+                                <div class="range-input">
+                                    <input type="range" id="confidenceThreshold" min="50" max="99" value="85" class="range-slider">
+                                    <span class="range-value" id="confidenceThresholdValue">85%</span>
+                                </div>
+                                <div class="setting-description">Minimum confidence required for speaker identification</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="maxSpeakers" class="setting-label">Maximum Speakers</label>
+                                <select id="maxSpeakers" class="form-select">
+                                    <option value="5">5 speakers</option>
+                                    <option value="10" selected>10 speakers</option>
+                                    <option value="20">20 speakers</option>
+                                    <option value="50">50 speakers</option>
+                                </select>
+                                <div class="setting-description">Maximum number of enrolled speakers</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="adaptiveLearning" class="setting-label">Adaptive Learning</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="adaptiveLearning" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Continuously improve recognition accuracy over time</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Detection Settings</h4>
+                            <div class="setting-item">
+                                <label for="voiceActivityDetection" class="setting-label">Voice Activity Detection</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="voiceActivityDetection" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Automatically detect when someone is speaking</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="silenceTimeout" class="setting-label">Silence Timeout</label>
+                                <div class="range-input">
+                                    <input type="range" id="silenceTimeout" min="1" max="10" value="3" class="range-slider">
+                                    <span class="range-value" id="silenceTimeoutValue">3s</span>
+                                </div>
+                                <div class="setting-description">Time to wait before ending voice detection</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="continuousRecognition" class="setting-label">Continuous Recognition</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="continuousRecognition">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Keep recognition active at all times</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Model Settings</h4>
+                            <div class="setting-item">
+                                <label for="modelAccuracy" class="setting-label">Model Accuracy</label>
+                                <select id="modelAccuracy" class="form-select">
+                                    <option value="fast">Fast (Lower accuracy)</option>
+                                    <option value="balanced" selected>Balanced</option>
+                                    <option value="accurate">Accurate (Slower)</option>
+                                </select>
+                                <div class="setting-description">Trade-off between speed and accuracy</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="embeddingSize" class="setting-label">Embedding Size</label>
+                                <select id="embeddingSize" class="form-select">
+                                    <option value="128">128 dimensions</option>
+                                    <option value="256" selected>256 dimensions</option>
+                                    <option value="512">512 dimensions</option>
+                                </select>
+                                <div class="setting-description">Size of speaker embeddings (higher = more accurate)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings Tab -->
+                <div class="tab-content" id="system-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">System Configuration</h3>
+                        
+                        <div class="settings-group">
+                            <h4 class="group-title">Performance</h4>
+                            <div class="setting-item">
+                                <label for="cpuThreads" class="setting-label">CPU Threads</label>
+                                <select id="cpuThreads" class="form-select">
+                                    <option value="1">1 thread</option>
+                                    <option value="2" selected>2 threads</option>
+                                    <option value="4">4 threads</option>
+                                    <option value="auto">Auto-detect</option>
+                                </select>
+                                <div class="setting-description">Number of CPU threads to use for processing</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="memoryLimit" class="setting-label">Memory Limit</label>
+                                <select id="memoryLimit" class="form-select">
+                                    <option value="256">256 MB</option>
+                                    <option value="512" selected>512 MB</option>
+                                    <option value="1024">1 GB</option>
+                                    <option value="2048">2 GB</option>
+                                </select>
+                                <div class="setting-description">Maximum memory usage for the system</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="gpuAcceleration" class="setting-label">GPU Acceleration</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="gpuAcceleration">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Use GPU for faster processing (if available)</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Storage</h4>
+                            <div class="setting-item">
+                                <label for="dataPath" class="setting-label">Data Directory</label>
+                                <div class="path-input">
+                                    <input type="text" id="dataPath" class="form-input" value="/var/lib/voice-recog" readonly>
+                                    <button class="btn btn-secondary btn-small" id="changeDataPath">Change</button>
+                                </div>
+                                <div class="setting-description">Directory where speaker data and models are stored</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="logRetention" class="setting-label">Log Retention</label>
+                                <select id="logRetention" class="form-select">
+                                    <option value="7">7 days</option>
+                                    <option value="30" selected>30 days</option>
+                                    <option value="90">90 days</option>
+                                    <option value="365">1 year</option>
+                                </select>
+                                <div class="setting-description">How long to keep system logs</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="autoBackup" class="setting-label">Automatic Backup</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="autoBackup" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Automatically backup speaker data and settings</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Updates</h4>
+                            <div class="setting-item">
+                                <label for="autoUpdate" class="setting-label">Automatic Updates</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="autoUpdate" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Automatically install system updates</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="updateChannel" class="setting-label">Update Channel</label>
+                                <select id="updateChannel" class="form-select">
+                                    <option value="stable" selected>Stable</option>
+                                    <option value="beta">Beta</option>
+                                    <option value="alpha">Alpha (Experimental)</option>
+                                </select>
+                                <div class="setting-description">Choose update frequency and stability</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings Tab -->
+                <div class="tab-content" id="security-tab">
+                    <div class="settings-section">
+                        <h3 class="section-title">Security Configuration</h3>
+                        
+                        <div class="settings-group">
+                            <h4 class="group-title">Authentication</h4>
+                            <div class="setting-item">
+                                <label for="enableAuth" class="setting-label">Enable Authentication</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="enableAuth">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Require login to access the system</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="sessionTimeout" class="setting-label">Session Timeout</label>
+                                <select id="sessionTimeout" class="form-select">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected>30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="240">4 hours</option>
+                                </select>
+                                <div class="setting-description">Automatic logout after inactivity</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="twoFactorAuth" class="setting-label">Two-Factor Authentication</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="twoFactorAuth">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Add extra security with 2FA</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Privacy</h4>
+                            <div class="setting-item">
+                                <label for="dataEncryption" class="setting-label">Data Encryption</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="dataEncryption" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Encrypt stored speaker data and recordings</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="anonymizeData" class="setting-label">Anonymize Data</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="anonymizeData">
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Remove personal identifiers from stored data</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="dataRetention" class="setting-label">Data Retention Period</label>
+                                <select id="dataRetention" class="form-select">
+                                    <option value="30">30 days</option>
+                                    <option value="90">90 days</option>
+                                    <option value="365" selected>1 year</option>
+                                    <option value="forever">Indefinite</option>
+                                </select>
+                                <div class="setting-description">How long to keep voice recordings</div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h4 class="group-title">Network Security</h4>
+                            <div class="setting-item">
+                                <label for="httpsOnly" class="setting-label">HTTPS Only</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="httpsOnly" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Force secure connections only</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="allowedIPs" class="setting-label">Allowed IP Addresses</label>
+                                <textarea id="allowedIPs" class="form-input" rows="3" placeholder="192.168.1.0/24&#10;10.0.0.0/8"></textarea>
+                                <div class="setting-description">Restrict access to specific IP ranges (one per line)</div>
+                            </div>
+
+                            <div class="setting-item">
+                                <label for="rateLimiting" class="setting-label">Rate Limiting</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="rateLimiting" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                                <div class="setting-description">Limit API requests to prevent abuse</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Information -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">System Information</h3>
+                </div>
+                <div class="card-content">
+                    <div class="system-info">
+                        <div class="info-item">
+                            <span class="info-label">Version:</span>
+                            <span class="info-value" id="systemVersion">1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Platform:</span>
+                            <span class="info-value" id="systemPlatform">Raspberry Pi 4</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Python Version:</span>
+                            <span class="info-value" id="pythonVersion">3.9.2</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">TensorFlow Version:</span>
+                            <span class="info-value" id="tensorflowVersion">2.8.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Updated:</span>
+                            <span class="info-value" id="lastUpdated">2024-01-15 10:30:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmModalTitle">Confirm Action</h3>
+                <button class="modal-close" id="closeConfirmModal">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmModalMessage">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelConfirm">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Global Scripts -->
+    <script src="/static/js/theme.js"></script>
+    <script src="/static/js/notifications.js"></script>
+</body>
+</html>

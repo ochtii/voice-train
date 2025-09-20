@@ -1,0 +1,93 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+Copyright (C) 2025 ochtii
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+================================================================================
+
+DEUTSCHE BESCHREIBUNG / GERMAN DESCRIPTION:
+
+Dieses Programm ist freie Software: Sie können es unter den Bedingungen
+der GNU General Public License, wie von der Free Software Foundation
+veröffentlicht, weitergeben und/oder modifizieren, entweder gemäß Version 3
+der Lizenz oder (nach Ihrer Option) jeder späteren Version.
+
+Dieses Programm wird in der Hoffnung verteilt, dass es nützlich sein wird,
+aber OHNE JEDE GEWÄHR; sogar ohne die implizite Gewähr der MARKTFÄHIGKEIT
+oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Siehe die GNU General Public License
+für weitere Details.
+
+Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+Programm erhalten haben. Falls nicht, siehe <https://www.gnu.org/licenses/>.
+
+================================================================================
+
+ENGLISH DESCRIPTION:
+
+This Voice Recognition Training System is licensed under the GNU General 
+Public License v3.0. This means:
+
+FREEDOMS:
+- You can use this software for any purpose
+- You can study and modify the source code
+- You can redistribute copies of the software
+- You can distribute modified versions
+
+RESPONSIBILITIES:
+- If you distribute this software, you must provide the source code
+- If you modify and distribute this software, you must also license it under GPL v3.0
+- You must include this license notice in all copies or substantial portions
+- Any derivative works must also be licensed under compatible terms
+
+DISCLAIMER:
+This software is provided "as is" without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement.
+
+================================================================================
+
+DEUTSCHE BESCHREIBUNG DES VOICE RECOGNITION SYSTEMS:
+
+Dieses Spracherkennungs-Trainingssystem steht unter der GNU General Public 
+License v3.0. Das bedeutet:
+
+FREIHEITEN:
+- Sie können diese Software für jeden Zweck verwenden
+- Sie können den Quellcode studieren und modifizieren
+- Sie können Kopien der Software weiterverteilen
+- Sie können modifizierte Versionen verteilen
+
+VERPFLICHTUNGEN:
+- Wenn Sie diese Software verteilen, müssen Sie den Quellcode bereitstellen
+- Wenn Sie diese Software modifizieren und verteilen, müssen Sie sie ebenfalls 
+  unter der GPL v3.0 lizenzieren
+- Sie müssen diesen Lizenzhinweis in allen Kopien oder wesentlichen Teilen beifügen
+- Alle abgeleiteten Werke müssen ebenfalls unter kompatiblen Bedingungen 
+  lizenziert werden
+
+HAFTUNGSAUSSCHLUSS:
+Diese Software wird "wie sie ist" ohne jegliche Gewährleistung bereitgestellt,
+weder ausdrücklich noch stillschweigend, einschließlich, aber nicht beschränkt
+auf die Gewährleistung der Marktgängigkeit, Eignung für einen bestimmten Zweck
+und Nichtverletzung von Rechten Dritter.
+
+================================================================================
+
+For the complete GNU General Public License v3.0 text, visit:
+https://www.gnu.org/licenses/gpl-3.0.html
+
+Für den vollständigen Text der GNU General Public License v3.0 besuchen Sie:
+https://www.gnu.org/licenses/gpl-3.0.html

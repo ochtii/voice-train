@@ -1,0 +1,327 @@
+<ui:Window x:Class="VoiceRecognitionClient.Views.MainWindow"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:ui="http://schemas.modernwpf.com/2019"
+           xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+           Title="Voice Recognition Client" Height="700" Width="900"
+           MinHeight="500" MinWidth="600"
+           Icon="pack://application:,,,/Assets/icon.ico">
+    
+    <ui:Window.Resources>
+        <!-- Converters -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        
+        <!-- DataTemplates -->
+        <DataTemplate x:Key="DeviceListItemTemplate">
+            <Border Style="{StaticResource CardStyle}" Margin="4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Ellipse Grid.Column="0" Style="{StaticResource StatusIndicatorStyle}"
+                             Fill="{StaticResource SuccessBrush}" 
+                             Visibility="{Binding IsOnline, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    
+                    <StackPanel Grid.Column="1" Margin="8,0">
+                        <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding ConnectionString}" Style="{StaticResource CaptionTextStyle}"/>
+                        <TextBlock Text="{Binding LastSeen, StringFormat='Zuletzt gesehen: {0:HH:mm:ss}'}" 
+                                   Style="{StaticResource CaptionTextStyle}"/>
+                    </StackPanel>
+                    
+                    <TextBlock Grid.Column="2" Text="●" Foreground="{StaticResource SuccessBrush}"
+                               Visibility="{Binding IsOnline, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="RecognitionResultTemplate">
+            <Border Style="{StaticResource CardStyle}" Margin="2" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{Binding SpeakerName}" FontWeight="SemiBold" FontSize="14"/>
+                        <TextBlock Text="{Binding Confidence, StringFormat='Genauigkeit: {0:P1}'}" 
+                                   Style="{StaticResource CaptionTextStyle}"/>
+                        <TextBlock Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}" 
+                                   Style="{StaticResource CaptionTextStyle}"/>
+                    </StackPanel>
+                    
+                    <ProgressBar Grid.Column="1" Width="60" Height="6" Minimum="0" Maximum="1" 
+                                 Value="{Binding Confidence}" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ui:Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}" Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Voice Recognition Client" Style="{StaticResource TitleTextStyle}"/>
+                    <TextBlock Text="{Binding ConnectionStatus}" Style="{StaticResource SubtitleTextStyle}"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Style="{StaticResource IconButtonStyle}" ToolTip="Einstellungen"
+                            Command="{Binding OpenSettingsCommand}">
+                        <TextBlock Text="⚙" FontSize="16"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel - Device Management -->
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Connection Card -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Verbindung" Style="{StaticResource SubtitleTextStyle}"/>
+                            
+                            <ComboBox ItemsSource="{Binding DiscoveredDevices}" 
+                                      SelectedItem="{Binding SelectedDevice}"
+                                      ItemTemplate="{StaticResource DeviceListItemTemplate}"
+                                      Margin="0,8,0,16"/>
+                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Button Grid.Column="0" Content="Suchen" 
+                                        Command="{Binding DiscoverDevicesCommand}"
+                                        IsEnabled="{Binding IsDiscovering, Converter={StaticResource InverseBooleanConverter}}"/>
+                                
+                                <Button Grid.Column="2" Content="Verbinden"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        Command="{Binding ConnectCommand}"
+                                        Visibility="{Binding IsConnected, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                                
+                                <Button Grid.Column="2" Content="Trennen"
+                                        Command="{Binding DisconnectCommand}"
+                                        Visibility="{Binding IsConnected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </Grid>
+                            
+                            <!-- Connection Status -->
+                            <Border Margin="0,16,0,0" Padding="8" CornerRadius="4"
+                                    Background="{Binding IsConnected, Converter={StaticResource ConnectionStatusColorConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <Ellipse Grid.Column="0" Style="{StaticResource StatusIndicatorStyle}"
+                                             Fill="{Binding IsConnected, Converter={StaticResource ConnectionStatusBrushConverter}}"/>
+                                    
+                                    <TextBlock Grid.Column="1" Text="{Binding ConnectionStatus}" 
+                                               VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Audio Control Card -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Audio Steuerung" Style="{StaticResource SubtitleTextStyle}"/>
+                            
+                            <ComboBox ItemsSource="{Binding AudioDevices}" 
+                                      DisplayMemberPath="Name"
+                                      Margin="0,8,0,16"/>
+                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="8"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Button Grid.Column="0" Content="▶ Start"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        Command="{Binding StartRecordingCommand}"
+                                        Visibility="{Binding IsRecording, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                                
+                                <Button Grid.Column="0" Content="⏸ Stop"
+                                        Command="{Binding StopRecordingCommand}"
+                                        Visibility="{Binding IsRecording, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                
+                                <Button Grid.Column="2" Content="🔄" ToolTip="Aktualisieren"
+                                        Command="{Binding RefreshAudioDevicesCommand}"/>
+                            </Grid>
+                            
+                            <!-- Audio Level Indicator -->
+                            <StackPanel Margin="0,16,0,0">
+                                <TextBlock Text="Audio Pegel" Style="{StaticResource CaptionTextStyle}"/>
+                                <ProgressBar Height="8" Minimum="0" Maximum="100" 
+                                             Value="{Binding AudioLevel}" Margin="0,4,0,0"/>
+                                <TextBlock Text="{Binding AudioLevel, StringFormat='{0:F1}%'}" 
+                                           Style="{StaticResource CaptionTextStyle}" HorizontalAlignment="Right"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Device List Card -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <Grid>
+                                <TextBlock Text="Gefundene Geräte" Style="{StaticResource SubtitleTextStyle}"/>
+                                <TextBlock Text="{Binding DiscoveredDevices.Count, StringFormat='{0} Geräte'}" 
+                                           Style="{StaticResource CaptionTextStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            
+                            <ListBox ItemsSource="{Binding DiscoveredDevices}"
+                                     SelectedItem="{Binding SelectedDevice}"
+                                     ItemTemplate="{StaticResource DeviceListItemTemplate}"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     MaxHeight="200"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Right Panel - Recognition Results -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Current Recognition Result -->
+                <Border Grid.Row="0" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Aktuelle Erkennung" Style="{StaticResource SubtitleTextStyle}"/>
+                        
+                        <Grid Margin="0,16,0,0" DataContext="{Binding LastRecognitionResult}">
+                            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" 
+                                    CornerRadius="8" Padding="16"
+                                    Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding SpeakerName}" FontSize="24" FontWeight="Light" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Confidence, StringFormat='Genauigkeit: {0:P1}'}" 
+                                               HorizontalAlignment="Center" Style="{StaticResource SubtitleTextStyle}"/>
+                                    <TextBlock Text="{Binding Timestamp, StringFormat='Zeit: {0:HH:mm:ss}'}" 
+                                               HorizontalAlignment="Center" Style="{StaticResource CaptionTextStyle}"/>
+                                    
+                                    <!-- Confidence Indicator -->
+                                    <ProgressBar Height="12" Minimum="0" Maximum="1" Value="{Binding Confidence}" 
+                                                 Margin="0,16,0,8"/>
+                                    
+                                    <!-- Additional Info -->
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Audio Dauer" Style="{StaticResource CaptionTextStyle}"/>
+                                            <TextBlock Text="{Binding AudioDuration, StringFormat='{0:F2}s'}"/>
+                                        </StackPanel>
+                                        
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="Verarbeitungszeit" Style="{StaticResource CaptionTextStyle}"/>
+                                            <TextBlock Text="{Binding ProcessingTime, StringFormat='{0:F0}ms'}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            
+                            <TextBlock Text="Keine Erkennung verfügbar" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Style="{StaticResource CaptionTextStyle}"
+                                       Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Recognition History -->
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="Verlauf" Style="{StaticResource SubtitleTextStyle}"/>
+                            <TextBlock Text="{Binding RecentResults.Count, StringFormat='{0} Ergebnisse'}" 
+                                       Style="{StaticResource CaptionTextStyle}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        </Grid>
+                        
+                        <ListBox ItemsSource="{Binding RecentResults}"
+                                 ItemTemplate="{StaticResource RecognitionResultTemplate}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Audio Visualization -->
+                <Border Grid.Row="2" Style="{StaticResource CardStyle}" Height="150">
+                    <StackPanel>
+                        <TextBlock Text="Audio Visualisierung" Style="{StaticResource SubtitleTextStyle}"/>
+                        
+                        <!-- Simple audio level visualization -->
+                        <Canvas Height="80" Margin="0,8,0,0" Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
+                            <Rectangle Fill="{StaticResource AccentBrush}" Height="80" 
+                                       Width="{Binding AudioLevel, Converter={StaticResource AudioLevelToWidthConverter}}"
+                                       Canvas.Left="0" Canvas.Top="0"/>
+                        </Canvas>
+                        
+                        <TextBlock Text="{Binding AudioLevel, StringFormat='Pegel: {0:F1}%'}" 
+                                   HorizontalAlignment="Center" Style="{StaticResource CaptionTextStyle}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}" Padding="16,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="Status:" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding ConnectionStatus}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="Geräte:" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding DiscoveredDevices.Count}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                    
+                    <TextBlock Text="Aufnahme:" Style="{StaticResource CaptionTextStyle}" VerticalAlignment="Center"/>
+                    <Ellipse Style="{StaticResource StatusIndicatorStyle}"
+                             Fill="{Binding IsRecording, Converter={StaticResource RecordingStatusBrushConverter}}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:Window>
