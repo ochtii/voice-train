@@ -127,7 +127,7 @@ class AutoDeployer:
         """Get latest commit hash from remote repository"""
         try:
             # GitHub API to get latest commit
-            api_url = self.repo_url.replace('github.com', 'api.github.com/repos').replace('.git', '')
+            api_url = self.repo_url.replace('.git', '').replace('https://github.com/', 'https://api.github.com/repos/')
             api_url = f"{api_url}/commits/{self.branch}"
             
             response = requests.get(api_url, timeout=10)
