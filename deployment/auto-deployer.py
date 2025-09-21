@@ -213,12 +213,11 @@ class AutoDeployer:
                 print(f"  {Colors.RED}- {file}{Colors.RESET}")
                 
     def stop_services(self) -> bool:
-        """Stop PM2 services"""
+        """Stop systemd services"""
         self.logger.info(f"{Colors.YELLOW}🛑 Stopping services...{Colors.RESET}")
         
         commands = [
-            'pm2 stop voice-recog-backend',
-            'pm2 flush voice-recog-backend'
+            'sudo systemctl stop voice-recog.service'
         ]
         
         for cmd in commands:
@@ -231,10 +230,10 @@ class AutoDeployer:
         return True
         
     def start_services(self) -> bool:
-        """Start PM2 services"""
+        """Start systemd services"""
         self.logger.info(f"{Colors.BLUE}🚀 Starting services...{Colors.RESET}")
         
-        success, output = self.run_command('pm2 start ecosystem.config.js --env production')
+        success, output = self.run_command('sudo systemctl start voice-recog.service')
         if success:
             self.logger.info(f"{Colors.GREEN}✓ Services started successfully{Colors.RESET}")
             return True
@@ -251,7 +250,7 @@ class AutoDeployer:
             ('Resetting to remote', f'git reset --hard origin/{self.branch}'),
             ('Cleaning untracked files', 'git clean -fd'),
             ('Updating submodules', 'git submodule update --init --recursive'),
-            ('Installing Python dependencies', 'source venv/bin/activate && pip install -r backend/requirements.txt'),
+            ('Installing Python dependencies', 'venv/bin/pip install -r backend/requirements.txt'),
         ]
         
         for step_name, command in deployment_steps:
