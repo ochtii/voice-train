@@ -115,7 +115,7 @@ class AutoDeployer:
                 cwd=cwd or self.project_root,
                 capture_output=True, 
                 text=True, 
-                timeout=60
+                timeout=300  # 5 minutes for slow Pi Zero
             )
             return result.returncode == 0, result.stdout + result.stderr
         except subprocess.TimeoutExpired:
@@ -250,7 +250,7 @@ class AutoDeployer:
             ('Resetting to remote', f'git reset --hard origin/{self.branch}'),
             ('Cleaning untracked files', 'git clean -fd'),
             ('Updating submodules', 'git submodule update --init --recursive'),
-            ('Installing Python dependencies', 'venv/bin/pip install -r backend/requirements.txt'),
+            ('Installing Python dependencies', 'venv/bin/pip install -r backend/requirements.txt --quiet'),
         ]
         
         for step_name, command in deployment_steps:
